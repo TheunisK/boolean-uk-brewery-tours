@@ -32,6 +32,7 @@ function filterBreweryTypes(stateData) {
 
 function filterMicroBreweries(stateData) {
   return stateData.filter(brewery => brewery.brewery_type === "micro");
+  console.log(stateData.filter(brewery => brewery.brewery_type === "micro"));
 }
 
 function filterBrewPubBreweries(stateData) {
@@ -50,6 +51,35 @@ function filterByCity (city, stateData) {
     }
   }
   return breweriesInCity;
+}
+
+function renderMicroBreweries(stateData) {
+  let newData = [];
+  const filterByType = document.querySelector("#filter-by-type");
+  filterByType.addEventListener("change", function(e) {
+    let type = e.target.value;
+    // console.log(e);
+    // console.log(e.target.value);
+    if (type === "micro") {
+      newData = filterMicroBreweries(stateData);
+      console.log(newData);
+      render(newData);
+    } if (type === "brewpub") {
+      newData = filterBrewPubBreweries(stateData); 
+      console.log(newData);
+      render(newData);
+    } if (type === "regional") {
+      newData = filterRegionalBreweries(stateData);
+      console.log(newData);
+      render(newData);
+    } else {
+      newData = stateData;
+    }
+    return newData;
+    console.log("here", newData);
+  });
+  return newData;
+  console.log("here", newData);
 }
 
 function fetchStateBreweries (state) {
@@ -156,13 +186,14 @@ function renderFilterSection(stateData) {
   mainEl.append(asideEl);
   asideEl.append(h2El, formEl1, divEl, formEl2);
   formEl1.append(labelEl1, selectEl);
+  labelEl1.append(h3El1);
   selectEl.append(optEl1, optEl2, optEl3, optEl4);
   divEl.append(h3El2, buttonEl);
 
   const cityList = citySorter(stateData);
   console.log("cities", cityList);
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < cityList.length; i++) {
     const inputEl1 = document.createElement("input");
     inputEl1.setAttribute("type", "checkbox");
     inputEl1.setAttribute("name", cityList[i].city);
@@ -212,7 +243,7 @@ function renderMainSection(stateData) {
 
 
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < stateData.length; i++) {
 
     const liEl = document.createElement("li");
     const h2El2 = document.createElement("h2");
@@ -265,6 +296,7 @@ function render(data) {
   mainEl.innerHTML = "";
   renderFilterSection(data);
   renderMainSection(data);
+  renderMicroBreweries(data);
 }
 
 renderBreweriesList();
